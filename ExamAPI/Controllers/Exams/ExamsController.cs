@@ -1,0 +1,105 @@
+﻿using ExamAPI.Data;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace ExamAPI.Controllers.Exams
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    [EnableCors("AllowSpecificOrigin")]
+
+    public class ExamsController : ControllerBase
+    {
+        private readonly ExamAPIContext _context;
+
+        public ExamsController(ExamAPIContext context)
+        {
+            _context = context;
+        }
+
+        // GET: api/Exams
+        [HttpGet("GET")]
+        public async Task<ActionResult<IEnumerable<ExamAPI.Models.Exams>>> GetExams()
+        {
+            return await _context.Exams.ToListAsync();
+        }
+
+        // GET: api/Exams/5
+        [HttpGet("GETId/{id}")]
+        public async Task<ActionResult<ExamAPI.Models.Exams>> GetExams(int id)
+        {
+            var exams = await _context.Exams.FindAsync(id);
+
+            if (exams == null)
+            {
+                return NotFound();
+            }
+
+            return exams;
+        }
+
+        // PUT: api/Exams/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("PUTId/{id}")]
+        public async Task<IActionResult> PutExams(int id, ExamAPI.Models.Exams exams)
+        {
+            if (id != exams.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(exams).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ExamsExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        // POST: api/Exams
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("POST")]
+        public async Task<ActionResult<ExamAPI.Models.Exams>> PostExams(ExamAPI.Models.Exams exams)
+        {
+            _context.Exams.Add(exams);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetExams", new { id = exams.Id }, exams);
+        }
+
+        // DELETE: api/Exams/5
+        [HttpDelete("DELETE/{id}")]
+        public async Task<IActionResult> DeleteExams(int id)
+        {
+            var exams = await _context.Exams.FindAsync(id);
+            if (exams == null)
+            {
+                return NotFound();
+            }
+
+            _context.Exams.Remove(exams);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool ExamsExists(int id)
+        {
+            return _context.Exams.Any(e => e.Id == id);
+        }
+    }
+}
