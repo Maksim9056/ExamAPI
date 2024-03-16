@@ -34,6 +34,8 @@ done\n\
 exec \"\$@\"" > /wait-for-postgres.sh && \
     chmod +x /wait-for-postgres.sh
 
+
+
 # Копируем и собираем приложение
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Diagnostics;
 
 namespace ExamAPI
 {
@@ -17,8 +18,25 @@ namespace ExamAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
-       
- 
+            // Команда для запуска службы PostgreSQL в Linux с использованием systemctl
+            string command = "service postgresql start";
+
+            // Создаем процесс для выполнения команды запуска службы PostgreSQL
+            Process process = new Process();
+            process.StartInfo.FileName = "/bin/bash";
+            process.StartInfo.Arguments = $"-c \"{command}\"";
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+
+            // Запускаем процесс
+            process.Start();
+
+            // Ждем, пока процесс завершится
+            process.WaitForExit();
+
+
+
             builder.Services.AddDbContext<ExamAPIContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("ExamAPIContext") ?? throw new InvalidOperationException("Connection string 'ExamAPIContext' not found.")));
 
