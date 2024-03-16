@@ -29,11 +29,11 @@ namespace ExamAPI
             {
                 var migrationDbContext = serviceScope.ServiceProvider.GetRequiredService<ExamAPIContext>();
 
-                //if (migrationDbContext.Database.GetPendingMigrations().Any())
-                //{
-                //    var migrator = migrationDbContext.GetService<IMigrator>();
-                //    migrator.Migrate();
-                //}
+                if (migrationDbContext.Database.GetPendingMigrations().Any())
+                {
+                    var migrator = migrationDbContext.GetService<IMigrator>();
+                    migrator.Migrate();
+                }
             }
 
             // Add services to the container.
