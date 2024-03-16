@@ -4,6 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace ExamAPI
 {
@@ -71,6 +75,10 @@ namespace ExamAPI
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+                app.UseHsts();
+
+                app.UseHttpsRedirection();
+
             }
 
             app.UseHttpsRedirection();
