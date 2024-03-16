@@ -18,36 +18,57 @@ namespace ExamAPI
             var builder = WebApplication.CreateBuilder(args);
 
        
-
+ 
             builder.Services.AddDbContext<ExamAPIContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("ExamAPIContext") ?? throw new InvalidOperationException("Connection string 'ExamAPIContext' not found.")));
-            // Add services to the container.
-            // Создание нового экземпляра сервиса DbContext и применение миграций
+
+
+            ////# Запуск миграций в базе данных C#
+            ////# (этот код нужно вставить в подходящее место вашего проекта C#)
             using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
             {
-                //var migrationDbContext = serviceScope.ServiceProvider.GetRequiredService<ExamAPIContext>();
+                var migrationDbContext = serviceScope.ServiceProvider.GetRequiredService<ExamAPIContext>();
 
-                //if (!migrationDbContext.Database.GetPendingMigrations().Any())
+                //if (migrationDbContext.Database.GetPendingMigrations().Any())
                 //{
-                //    var migrator = migrationDbContext.GetInfrastructure().GetService<IMigrator>();
+                //    var migrator = migrationDbContext.GetService<IMigrator>();
                 //    migrator.Migrate();
                 //}
-                var serviceProvider = serviceScope.ServiceProvider;
-
-                // Получение экземпляра контекста базы данных
-                var migrationDbContext = serviceProvider.GetRequiredService<ExamAPIContext>();
-
-                // Создание миграции, если они отсутствуют
-                if (migrationDbContext.Database.GetPendingMigrations().Any())
-                {
-                    var migrator = migrationDbContext.GetService<IMigrator>();
-                    migrator.Migrate();
-                }
-
-                var dbContext = serviceScope.ServiceProvider.GetRequiredService<ExamAPIContext>();
-                // Применение всех ожидающих миграций
-                dbContext.Database.Migrate();
             }
+
+            // Add services to the container.
+            //// Создание нового экземпляра сервиса DbContext и применение миграций
+            //using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
+            //{
+            //    var migrationDbContext = serviceScope.ServiceProvider.GetRequiredService<ExamAPIContext>();
+
+            //    //if (!migrationDbContext.Database.GetPendingMigrations().Any())
+            //    //{
+            //    //    var migrator = migrationDbContext.GetInfrastructure().GetService<IMigrator>();
+            //    //    migrator.Migrate();
+            //    //}
+            //    //var serviceProvider = serviceScope.ServiceProvider;
+            //    // Создание миграции, если они отсутствуют
+            //    if (migrationDbContext.Database.GetPendingMigrations().Any())
+            //    {
+            //        var migrator = migrationDbContext.GetService<IMigrator>();
+            //        migrator.Migrate();
+            //    }
+            //    //// Получение экземпляра контекста базы данных
+            //    //var migrationDbContext = serviceProvider.GetRequiredService<ExamAPIContext>();
+
+            //    ////// Создание миграции, если они отсутствуют
+            //    ////if (migrationDbContext.Database.GetPendingMigrations().Any())
+            //    ////{
+            //    ////    var migrator = migrationDbContext.GetService<IMigrator>();
+            //    ////    migrator.Migrate();
+            //    ////}
+
+            //    //var dbContext = serviceScope.ServiceProvider.GetRequiredService<ExamAPIContext>();
+            //    //// Применение всех ожидающих миграций
+            //    //dbContext.Database.Migrate();
+
+            //}
 
 
             builder.Services.AddControllers();
