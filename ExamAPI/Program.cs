@@ -116,17 +116,17 @@ namespace ExamAPI
                 app.UseSwaggerUI();
                 app.UseHsts();
 
-                app.UseHttpsRedirection();
+                //app.UseHttpsRedirection();
 
             }
 
-            app.UseHttpsRedirection();
-
+            //app.UseHttpsRedirection();
+            app.UseRouting();
             app.UseAuthorization();
 
             // Включаем CORS с политикой без блокировок
             app.UseCors("AllowAll");
-
+            //app.Run("http://localhost:8080");
 
 
             app.MapControllers();

@@ -15,7 +15,7 @@ services:
     ports:
       - "8080:80"     
     environment:
-      DB_CONNECTION_STRING: "host=postgres_image;port=5432;database=Testd32;username=postgres;password=1"
+      DB_CONNECTION_STRING: "host=postgres_image;port=5432;database=testd32;username=postgres;password=1"
     networks:
       - dockerapi-dev  
   
@@ -30,7 +30,7 @@ services:
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "1"
-      POSTGRES_DB: "Testd32"
+      POSTGRES_DB: "testd32"
     networks:
       - dockerapi-dev
 

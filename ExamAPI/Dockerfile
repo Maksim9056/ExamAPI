@@ -1,5 +1,6 @@
 # Используем базовый образ ASP.NET среды выполнения
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+#FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-bookworm-slim AS base
 WORKDIR /app
 EXPOSE 8080
 
@@ -20,24 +21,10 @@ RUN service postgresql start && \
     su - postgres -c "psql -c \"CREATE DATABASE testd32;\"" && \
     su - postgres -c "psql -c \"GRANT ALL PRIVILEGES ON DATABASE testd32 TO postgres;\""
 
-# Добавляем скрипт для ожидания успешного запуска PostgreSQL
-RUN echo -e "#!/bin/bash\n\
-\n\
-# Ожидаем запуска PostgreSQL\n\
-until pg_isready -h localhost -p 5432 -U postgres\n\
-do\n\
-  echo \"Ждем запуска PostgreSQL\"\n\
-  sleep 50\n\
-done\n\
-\n\
-# Когда PostgreSQL запущен, запускаем приложение\n\
-exec \"\$@\"" > /wait-for-postgres.sh && \
-    chmod +x /wait-for-postgres.sh
-
 
 
 # Копируем и собираем приложение
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim AS build
 WORKDIR /src
 COPY ["ExamAPI/ExamAPI.csproj", "ExamAPI/"]
 RUN dotnet restore "./ExamAPI/ExamAPI.csproj"
@@ -55,4 +42,4 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 
 # Добавляем ожидание PostgreSQL перед запуском приложения
-CMD ["/wait-for-postgres.sh", "dotnet", "ExamAPI.dll"]
+ENTRYPOINT ["dotnet", "ExamAPI.dll"]

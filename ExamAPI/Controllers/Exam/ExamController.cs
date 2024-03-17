@@ -16,7 +16,7 @@ namespace ExamAPI.Controllers.Exam
             _context = context;
         }
 
-        // GET: api/Exam
+        // GET: api/Exam/GET
         [HttpGet("GET")]
         public async Task<ActionResult<IEnumerable<ExamAPI.Models.Exam>>> GetExam()
         {
